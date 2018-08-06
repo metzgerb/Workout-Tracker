@@ -5,7 +5,7 @@
       <tbody>
          <tr>
             <td>
-               <input type="hidden" name="id" >
+               <input type="hidden" name="id" />
                <label for="date">Date of Workout: </label>
             </td>
             <td>
@@ -66,7 +66,16 @@
                <td>{{this.reps}}</td>
                <td>{{this.weight}}</td>
                <td>{{#if this.unit}} lbs {{else}} kgs {{/if}}</td>
-               <td>add forms and buttons for edit and delete</td>
+               <td>
+                  <form>
+                     <input type="hidden" name="id" />
+                     <input type="submit" value="Edit"/>
+                  </form>
+                  <form>
+                     <input type="hidden" name="id" />
+                     <input type="submit" value="Delete"/>
+                  </form>
+               </td>
             </tr>
          {{/each}}
       </tbody>
