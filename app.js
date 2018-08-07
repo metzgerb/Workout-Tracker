@@ -32,20 +32,24 @@ app.get('/',function(req,res,next){
 
 //render POST for homepage
 app.post('/',function(req,res,next){
-  //check if adding a new item
-  if(req.body['add']){
+   //check if adding a new item
+   if(req.body['add']){
+      //insert into database
      
-  }
+      //return row to add to HTML
+   }
   
-  //check if updating item
-  if(req.body['update']{
+   //check if updating item
+   if(req.body['update']{
+      //update database
      
-  }
+      //return row to replace in HTML
+   }
   
-  //check if deleting item
-  if(req.body['delete']){
-     
-  }
+   //check if deleting item
+   if(req.body['delete']){
+      //delete from database
+   }
   
 });
 
