@@ -1,5 +1,5 @@
 <h1>Simple Workout Tracker</h1>
-<form action="">
+<form method="post">
    <table>
       <thead></thead>
       <tbody>
@@ -41,45 +41,46 @@
          </tr>
          <tr>
             <td colspan="6" align="center">
-               <input type="submit" value="Save"/>
+               <input id="formBtn" type="submit" name="add" value="Add"/>
             </td>
          </tr>
       </tbody>
    </table>
 </form>
 <hr>
-{{#if results}}
-   <table>
-      <thead>
-         <th>Date</th>
-         <th>Workout Name</th>
-         <th># of Reps</th>
-         <th>Weight Used</th>
-         <th>Unit of weight</th>
-         <th>Options</th>
-      </thead>
-      <tbody>
+
+<table>
+   <thead>
+      <th>Date</th>
+      <th>Workout Name</th>
+      <th># of Reps</th>
+      <th>Weight Used</th>
+      <th>Unit of weight</th>
+      <th>Options</th>
+   </thead>
+   <tbody>
+      {{#if results}}
          {{#each results}}
-            <tr>
+            <tr id={{this.id}}>
                <td>{{this.date}}</td>
                <td>{{this.name}}</td>
                <td>{{this.reps}}</td>
                <td>{{this.weight}}</td>
                <td>{{#if this.unit}} lbs {{else}} kgs {{/if}}</td>
                <td>
-                  <form>
+                  <form method="post">
                      <input type="hidden" name="id" />
-                     <input type="submit" value="Edit"/>
+                     <input type="submit" name= "edit" value="Edit"/>
                   </form>
-                  <form>
+                  <form method="post">
                      <input type="hidden" name="id" />
-                     <input type="submit" value="Delete"/>
+                     <input type="submit" name="delete" value="Delete"/>
                   </form>
                </td>
             </tr>
          {{/each}}
-      </tbody>
-   </table>
-{{else}}
-   <h3>No completed workouts</h3>
-{{/if}}
+      {{/if}}
+   </tbody>
+</table>
+
+

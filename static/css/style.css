@@ -13,7 +13,7 @@ h1, h3 {
    text-align: center;
 }
 
-table, tr, td {
+table, tr, th, td {
    border-collapse: collapse;
    border: solid 1px;
    padding: 10px;

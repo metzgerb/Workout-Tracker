@@ -16,6 +16,8 @@ app.use(express.static('static'));
 
 //render GET for homepage
 app.get('/',function(req,res,next){
+   //check if request is empty
+   
    var context = {};
    mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
       if(err){
@@ -30,15 +32,21 @@ app.get('/',function(req,res,next){
 
 //render POST for homepage
 app.post('/',function(req,res,next){
-   var context = {};
-   //store body parameters
-   var bParams = [];
-   for (var p in req.body){
-      bParams.push({'name':p,'value':req.body[p]})
-   }
+  //check if adding a new item
+  if(req.body['add']){
+     
+  }
   
-   context.bodyList = bParams;
-   res.render('home', context);
+  //check if updating item
+  if(req.body['update']{
+     
+  }
+  
+  //check if deleting item
+  if(req.body['delete']){
+     
+  }
+  
 });
 
 app.get('/reset-table',function(req,res,next){
