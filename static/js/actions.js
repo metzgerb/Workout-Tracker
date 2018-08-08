@@ -3,6 +3,10 @@ function build(data){
    //get tablebody
    var table = document.getElementById("data-table");
    
+   //remove all table rows
+   while(table.firstChild){
+      table.removeChild(table.firstChild);
+   }
    //loop through array to create table rows
    for (var i = 0; i < data.length ; i++) {
       var tRowIn = document.createElement("tr");
