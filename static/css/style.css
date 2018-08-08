@@ -19,8 +19,11 @@ table, tr, th, td {
    padding: 10px;
 }
 
-table {  
+table {
    margin: 15px auto;
+}
+
+.form-table {  
    text-align: right;
 }
 
@@ -38,7 +41,7 @@ input[type=date] {
    width: 100%;
 }
 
-input[type=submit] {
+button {
    height: 30px;
    padding: 5px;
    font-weight: bold;

@@ -16,8 +16,6 @@ app.use(express.static('static'));
 
 //render GET for homepage
 app.get('/',function(req,res,next){
-   //check if request is empty
-   
    var context = {};
    mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
       if(err){
@@ -33,14 +31,29 @@ app.get('/',function(req,res,next){
 //render POST for homepage
 app.post('/',function(req,res,next){
    //check if adding a new item
-   if(req.body['add']){
+   if(req.body.hasOwnProperty('add')){
       //insert into database
-     
+      mysql.pool.query("INSERT INTO workouts (`name`,`reps`,`weight`,`date`,`lbs`) VALUES (?,?,?,?,?)",
+         [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, result){
+         if(err){
+            next(err);
+            return;
+         }
+      });
+      
       //return row to add to HTML
+      mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+         if(err){
+            next(err);
+            return;
+         }
+      
+         res.json(rows);
+      });
    }
   
    //check if updating item
-   if(req.body['update']{
+   if(req.body['update']){
       //update database
      
       //return row to replace in HTML
