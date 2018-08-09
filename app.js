@@ -5,6 +5,7 @@ var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser');
 var request = require('request');
 var mysql = require('./dbcon.js');
+var moment = require('moment');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -24,6 +25,12 @@ app.get('/',function(req,res,next){
       }
       
       context.results = rows;
+     
+      //reformat dates
+      for (var i = 0; i< context.results.length; i++){
+         context.results[i].date = moment(context.results[i].date).format('MM-DD-YYYY');
+      }
+      
       res.render('home', context);
    });
 });
@@ -39,16 +46,18 @@ app.post('/',function(req,res,next){
             next(err);
             return;
          }
-      });
-      
-      //return row to add to HTML
-      mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
-         if(err){
-            next(err);
-            return;
-         }
-      
-         res.json(rows);
+         
+         //return row to add to HTML
+         mysql.pool.query('SELECT * FROM workouts WHERE id=?', [result.insertId], function(err, rows, fields){
+            if(err){
+               next(err);
+               return;
+            }
+            //reformat date
+            rows[0].date = moment(rows[0].date).format('MM-DD-YYYY');
+            
+            res.json(rows);
+         });
       });
    }
   
@@ -60,10 +69,18 @@ app.post('/',function(req,res,next){
    }
   
    //check if deleting item
-   if(req.body['delete']){
+   if(req.body['deleteRow']){
       //delete from database
+      mysql.pool.query("DELETE FROM workouts WHERE id=? ",
+         [req.body.id], function(err, result){
+         if(err){
+            next(err);
+            return;
+         } 
+         
+         res.json(result);
+      });
    }
-  
 });
 
 app.get('/reset-table',function(req,res,next){

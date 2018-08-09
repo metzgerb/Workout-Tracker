@@ -1,5 +1,5 @@
 <h1>Simple Workout Tracker</h1>
-<form method="post">
+<form method="post" id="input-form">
    <table class="form-table">
       <thead></thead>
       <tbody>
@@ -36,7 +36,7 @@
             </td>
             <td>
                <input type="radio" name="unit" id="formLbs" value="lbs" checked="checked"/> lbs
-               <input type="radio" name="unit" value="kgs"/> kgs
+               <input type="radio" name="unit" id="formKgs" value="kgs"/> kgs
             </td>
          </tr>
          <tr>
@@ -65,7 +65,7 @@
                <td>{{this.name}}</td>
                <td>{{this.reps}}</td>
                <td>{{this.weight}}</td>
-               <td>{{#if this.unit}} lbs {{else}} kgs {{/if}}</td>
+               <td>{{#if this.lbs}} lbs {{else}} kgs {{/if}}</td>
                <td>
                   <button type="button" onclick="editRow({{this.id}})">Edit</button>
                   <button type="button" onclick="deleteRow({{this.id}})">Delete</button>
