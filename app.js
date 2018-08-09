@@ -64,8 +64,26 @@ app.post('/',function(req,res,next){
    //check if updating item
    if(req.body['update']){
       //update database
+      mysql.pool.query("UPDATE workouts WHERE id=?",
+         [req.body.id, req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, result){
+         if(err){
+            next(err);
+            return;
+         }
+         
+         //return row to update in HTML
+         mysql.pool.query('SELECT * FROM workouts WHERE id=?', [result.insertId], function(err, rows, fields){
+            if(err){
+               next(err);
+               return;
+            }
+            //reformat date
+            rows[0].date = moment(rows[0].date).format('MM-DD-YYYY');
+            
+            res.json(rows);
+         });
+      });
      
-      //return row to replace in HTML
    }
   
    //check if deleting item

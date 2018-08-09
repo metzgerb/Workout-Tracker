@@ -1,4 +1,6 @@
-
+//add initial event handlers for form buttons
+document.getElementById("formBtn").addEventListener("click", addRow);
+document.getElementById("resetBtn").addEventListener("click", resetForm);
 
 //handles add
 function addRow(){
@@ -10,16 +12,9 @@ function addRow(){
    payload.weight = document.getElementById("formWeight").value;
    payload.date = document.getElementById("formDate").value;
    payload.lbs = document.getElementById("formLbs").checked;
-   console.log(payload);
    
    //reset form
-   document.getElementById("formId").value = "";
-   document.getElementById("formName").value = "";
-   document.getElementById("formReps").value= "";
-   document.getElementById("formWeight").value= "";
-   document.getElementById("formDate").value= "";
-   document.getElementById("formLbs").checked = true;
-   document.getElementById("formKgs").checked = false;
+   resetForm();
    
    req.open('POST', '/', true);
    req.setRequestHeader('Content-Type', 'application/json');
@@ -126,16 +121,19 @@ function editRow(id){
       document.getElementById("formLbs").checked = false;
       document.getElementById("formKgs").checked = true;
    }
-  
-   //change form button from add to updateRow
    
+   //change form buttons from add to updateRow
+   document.getElementById("formBtn").removeEventListener("click",addRow);
+   document.getElementById("formBtn").addEventListener("click", updateRow);
+   document.getElementById("formBtn").textContent = "Update";
+   document.getElementById("resetBtn").textContent = "Cancel";
 }
 
 //handles update
 function updateRow(){
    //create request
    var req = new XMLHttpRequest();
-   var payload = {add:true};
+   var payload = {update:true};
    payload.name = document.getElementById("formName").value;
    payload.reps = document.getElementById("formReps").value;
    payload.weight = document.getElementById("formWeight").value;
@@ -143,10 +141,26 @@ function updateRow(){
    payload.lbs = document.getElementById("formLbs").value;
    
    //reset form
+   resetForm();
+   
+   //update DB
+   
+   //update row in html
+   
+   
+   //change form button from updateRow to addRow
+   document.getElementById("formBtn").removeEventListener("click",updateRow);
+   document.getElementById("formBtn").addEventListener("click", addRow);
+   document.getElementById("formBtn").textContent = "Add";
+   document.getElementById("resetBtn").textContent = "Reset";
+}
+	
+function resetForm(){
    document.getElementById("formId").value = "";
    document.getElementById("formName").value = "";
    document.getElementById("formReps").value= "";
    document.getElementById("formWeight").value= "";
    document.getElementById("formDate").value= "";
-   document.getElementById("formLbs").value= "";
+   document.getElementById("formLbs").checked = true;
+   document.getElementById("formKgs").checked = false;
 }
