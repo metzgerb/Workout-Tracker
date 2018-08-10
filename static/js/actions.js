@@ -43,9 +43,12 @@ function addRow(){
       payload.date = document.getElementById("formDate").value;
    }
    
-   payload.lbs = document.getElementById("formLbs").checked;
-   
-   console.log(payload);
+   //check for empty unit of weight
+   if((!document.getElementById("formLbs").checked && !document.getElementById("formKgs").checked)|| document.getElementById("formWeight").value == "") {
+      payload.lbs = null;
+   } else {
+      payload.lbs = document.getElementById("formLbs").checked;
+   }
    
    //reset form
    resetForm();
@@ -79,7 +82,9 @@ function addRow(){
          rowCells[1].textContent = response[0].name;
          rowCells[2].textContent = response[0].reps;
          rowCells[3].textContent = response[0].weight;
-         if(response[0].lbs == true){
+         if(response[0].lbs == null){
+            rowCells[4].textContent = "";
+         } else if (response[0].lbs == true) {
             rowCells[4].textContent = "lbs";
          } else {
             rowCells[4].textContent = "kgs";
@@ -113,6 +118,14 @@ function deleteRow(id){
    var payload = {deleteRow:true};
    payload.id = id;
    
+   //reset form in case an edit was taking place on the record being deleted
+   resetForm();
+   //change form button from updateRow to addRow
+   document.getElementById("formBtn").removeEventListener("click",updateRow);
+   document.getElementById("formBtn").addEventListener("click", addRow);
+   document.getElementById("formBtn").textContent = "Add";
+   document.getElementById("resetBtn").textContent = "Reset";
+   
    //call delete from database
    req.open('POST', '/', true);
    req.setRequestHeader('Content-Type', 'application/json');
@@ -143,12 +156,20 @@ function editRow(id){
    document.getElementById("formName").value = rowCells[1].textContent;
    document.getElementById("formReps").value= rowCells[2].textContent;
    document.getElementById("formWeight").value= rowCells[3].textContent;
-   //format date from MM-DD-YYYY to YYYY-MM-DD
-   var formattedDate = rowCells[0].textContent.split("-");
-   formattedDate = formattedDate[2] + '-' + formattedDate[0] + '-' + formattedDate[1];
-   document.getElementById("formDate").value= formattedDate;
    
-   if(rowCells[4].textContent == "Lbs") {
+   //format date from MM-DD-YYYY to YYYY-MM-DD
+   if(rowCells[0].textContent!= ""){
+      var formattedDate = rowCells[0].textContent.split("-");
+      formattedDate = formattedDate[2] + '-' + formattedDate[0] + '-' + formattedDate[1];
+      document.getElementById("formDate").value= formattedDate;
+   } else {
+      document.getElementById("formDate").value = "";
+   }
+   
+   if(rowCells[4].textContent == "") {
+      document.getElementById("formLbs").checked = false;
+      document.getElementById("formKgs").checked = false;
+   } else if (rowCells[4].textContent == "lbs"){
       document.getElementById("formLbs").checked = true;
       document.getElementById("formKgs").checked = false;
    } else {
@@ -198,7 +219,12 @@ function updateRow(){
       payload.date = document.getElementById("formDate").value;
    }
    
-   payload.lbs = document.getElementById("formLbs").checked;
+   //check for empty unit of weight
+   if((!document.getElementById("formLbs").checked && !document.getElementById("formKgs").checked)|| document.getElementById("formWeight").value == "") {
+      payload.lbs = null;
+   } else {
+      payload.lbs = document.getElementById("formLbs").checked;
+   }
    
    //reset form
    resetForm();
@@ -219,7 +245,9 @@ function updateRow(){
          rowCells[1].textContent = response[0].name;
          rowCells[2].textContent = response[0].reps;
          rowCells[3].textContent = response[0].weight;
-         if(response[0].lbs == true){
+         if(response[0].lbs == null){
+            rowCells[4].textContent = "";
+         } else if (response[0].lbs == true) {
             rowCells[4].textContent = "lbs";
          } else {
             rowCells[4].textContent = "kgs";
