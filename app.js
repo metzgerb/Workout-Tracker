@@ -26,12 +26,20 @@ app.get('/',function(req,res,next){
       
       context.results = rows;
      
-      //reformat dates
+      //perform formatting
       for (var i = 0; i< context.results.length; i++){
+         //reformat dates
          if (context.results[i].date != null){
             context.results[i].date = moment(context.results[i].date).format('MM-DD-YYYY');
          }
+         //add kgs to results
+         if(context.results[i].lbs == null) {
+            context.results[i].kgs = false;
+         } else {
+            context.results[i].kgs = !context.results[i].lbs;
+         }
       }
+      
       res.render('home', context);
    });
 });
