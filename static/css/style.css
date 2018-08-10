@@ -9,10 +9,14 @@ body {
     padding-top: 10px;
 }
 
-h1, h3 {
+h1, h3, p{
    text-align: center;
 }
 
+#errorMsg {
+   color: red;
+   font-weight: bold;
+}
 table, tr, th, td {
    border-collapse: collapse;
    border: solid 1px;
@@ -29,6 +33,10 @@ table {
 
 label {
    font-weight: bold;
+}
+
+input {
+   border: 1px solid black;
 }
 
 input[type=text] {

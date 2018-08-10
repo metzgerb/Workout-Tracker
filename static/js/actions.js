@@ -2,16 +2,50 @@
 document.getElementById("formBtn").addEventListener("click", addRow);
 document.getElementById("resetBtn").addEventListener("click", resetForm);
 
+//hide error message element and reset error border
+document.getElementById("errorMsg").style.display = "none";
+document.getElementById("formName").style.borderColor = "black";
+document.getElementById("formName").style.borderWidth = "1px";
+
 //handles add
 function addRow(){
+   //check if name is blank
+   if(document.getElementById("formName").value == ""){
+      document.getElementById("errorMsg").textContent = "Name must not be blank!";
+      document.getElementById("errorMsg").style.display = "block";
+      document.getElementById("formName").style.borderColor = "red";
+      document.getElementById("formName").style.borderWidth = "2px";
+      return;
+   }
+   
    //create request
    var req = new XMLHttpRequest();
    var payload = {add:true};
    payload.name = document.getElementById("formName").value;
-   payload.reps = document.getElementById("formReps").value;
-   payload.weight = document.getElementById("formWeight").value;
-   payload.date = document.getElementById("formDate").value;
+   
+   //check for empty reps
+   if(document.getElementById("formReps").value == "") {
+      payload.reps = null;
+   } else {
+      payload.reps = document.getElementById("formReps").value;
+   }
+   //check for empty weight
+   if (document.getElementById("formWeight").value == ""){
+      payload.weight = null;
+   } else {
+      payload.weight = document.getElementById("formWeight").value;
+   }
+   
+   //check for empty date
+   if(document.getElementById("formDate").value == ""){
+      payload.date = null;
+   } else {
+      payload.date = document.getElementById("formDate").value;
+   }
+   
    payload.lbs = document.getElementById("formLbs").checked;
+   
+   console.log(payload);
    
    //reset form
    resetForm();
@@ -131,22 +165,72 @@ function editRow(id){
 
 //handles update
 function updateRow(){
+   //check if name is blank
+   if(document.getElementById("formName").value == ""){
+      document.getElementById("errorMsg").textContent = "Workout name must not be blank!";
+      document.getElementById("errorMsg").style.display = "block";
+      document.getElementById("formName").style.borderColor = "red";
+      document.getElementById("formName").style.borderWidth = "2px";
+      return;
+   }
+   
    //create request
    var req = new XMLHttpRequest();
-   var payload = {update:true};
+   var payload = {updateRow:true};
+   payload.id = document.getElementById("formId").value;
    payload.name = document.getElementById("formName").value;
-   payload.reps = document.getElementById("formReps").value;
-   payload.weight = document.getElementById("formWeight").value;
-   payload.date = document.getElementById("formDate").value;
-   payload.lbs = document.getElementById("formLbs").value;
+   //check for empty reps
+   if(document.getElementById("formReps").value == "") {
+      payload.reps = null;
+   } else {
+      payload.reps = document.getElementById("formReps").value;
+   }
+   //check for empty weight
+   if (document.getElementById("formWeight").value == ""){
+      payload.weight = null;
+   } else {
+      payload.weight = document.getElementById("formWeight").value;
+   }
+   //check for empty date
+   if(document.getElementById("formDate").value == ""){
+      payload.date = null;
+   } else {
+      payload.date = document.getElementById("formDate").value;
+   }
+   
+   payload.lbs = document.getElementById("formLbs").checked;
    
    //reset form
    resetForm();
    
-   //update DB
+   //send update to DB
+   req.open('POST', '/', true);
+   req.setRequestHeader('Content-Type', 'application/json');
+   req.addEventListener('load',function(){
+      if(req.status >= 200 && req.status < 400){
+         var response = JSON.parse(req.responseText);
+
+         //get row to update
+         var rowToUpdate = document.getElementById(response[0].id);
+         
+         //fill cells
+         var rowCells = rowToUpdate.getElementsByTagName("td");
+         rowCells[0].textContent = response[0].date;
+         rowCells[1].textContent = response[0].name;
+         rowCells[2].textContent = response[0].reps;
+         rowCells[3].textContent = response[0].weight;
+         if(response[0].lbs == true){
+            rowCells[4].textContent = "lbs";
+         } else {
+            rowCells[4].textContent = "kgs";
+         }
+         
+      } else {
+         console.log("Error in network request: " + req.statusText);
+      }});
    
-   //update row in html
-   
+   //send payload to node app
+   req.send(JSON.stringify(payload));
    
    //change form button from updateRow to addRow
    document.getElementById("formBtn").removeEventListener("click",updateRow);
@@ -156,11 +240,17 @@ function updateRow(){
 }
 	
 function resetForm(){
+   //clear out form fields
    document.getElementById("formId").value = "";
    document.getElementById("formName").value = "";
    document.getElementById("formReps").value= "";
    document.getElementById("formWeight").value= "";
    document.getElementById("formDate").value= "";
-   document.getElementById("formLbs").checked = true;
+   document.getElementById("formLbs").checked = false;
    document.getElementById("formKgs").checked = false;
+   
+   //hide error message element
+   document.getElementById("errorMsg").style.display = "none";
+   document.getElementById("formName").style.borderColor = "black";
+   document.getElementById("formName").style.borderWidth = "1px";
 }

@@ -28,9 +28,10 @@ app.get('/',function(req,res,next){
      
       //reformat dates
       for (var i = 0; i< context.results.length; i++){
-         context.results[i].date = moment(context.results[i].date).format('MM-DD-YYYY');
+         if (context.results[i].date != null){
+            context.results[i].date = moment(context.results[i].date).format('MM-DD-YYYY');
+         }
       }
-      
       res.render('home', context);
    });
 });
@@ -53,8 +54,11 @@ app.post('/',function(req,res,next){
                next(err);
                return;
             }
-            //reformat date
-            rows[0].date = moment(rows[0].date).format('MM-DD-YYYY');
+            
+            //reformat date if not null
+            if(rows[0].date != null){
+               rows[0].date = moment(rows[0].date).format('MM-DD-YYYY');
+            }
             
             res.json(rows);
          });
@@ -62,23 +66,27 @@ app.post('/',function(req,res,next){
    }
   
    //check if updating item
-   if(req.body['update']){
+   if(req.body.hasOwnProperty('updateRow')){
       //update database
-      mysql.pool.query("UPDATE workouts WHERE id=?",
-         [req.body.id, req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, result){
+      
+      mysql.pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=?",
+         [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs, req.body.id], function(err, result){
          if(err){
             next(err);
             return;
          }
          
          //return row to update in HTML
-         mysql.pool.query('SELECT * FROM workouts WHERE id=?', [result.insertId], function(err, rows, fields){
+         mysql.pool.query('SELECT * FROM workouts WHERE id=?', [req.body.id], function(err, rows, fields){
             if(err){
                next(err);
                return;
             }
-            //reformat date
-            rows[0].date = moment(rows[0].date).format('MM-DD-YYYY');
+            
+             //reformat date if not null
+            if(rows[0].date != null){
+               rows[0].date = moment(rows[0].date).format('MM-DD-YYYY');
+            }
             
             res.json(rows);
          });
@@ -87,7 +95,7 @@ app.post('/',function(req,res,next){
    }
   
    //check if deleting item
-   if(req.body['deleteRow']){
+   if(req.body.hasOwnProperty('deleteRow')){
       //delete from database
       mysql.pool.query("DELETE FROM workouts WHERE id=? ",
          [req.body.id], function(err, result){
