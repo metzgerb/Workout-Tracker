@@ -4,7 +4,7 @@ document.getElementById("resetBtn").addEventListener("click", resetForm);
 
 //hide error message element and reset error border
 document.getElementById("errorMsg").style.display = "none";
-document.getElementById("formName").style.borderColor = "black";
+document.getElementById("formName").style.borderColor = "#ddd";
 document.getElementById("formName").style.borderWidth = "1px";
 
 //handles add
@@ -279,6 +279,6 @@ function resetForm(){
    
    //hide error message element
    document.getElementById("errorMsg").style.display = "none";
-   document.getElementById("formName").style.borderColor = "black";
+   document.getElementById("formName").style.borderColor = "#ddd";
    document.getElementById("formName").style.borderWidth = "1px";
 }
