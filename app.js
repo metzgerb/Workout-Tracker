@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 8554);
+app.set('port', 8455);
 app.use(express.static('static'));
 
 //render GET for homepage
@@ -117,7 +117,7 @@ app.post('/',function(req,res,next){
    }
 });
 
-app.get('/reset-table',function(req,res,next){
+/*app.get('/reset-table',function(req,res,next){
    var context = {};
    mysql.pool.query("DROP TABLE IF EXISTS workouts", function(err){
       var createString = "CREATE TABLE workouts("+
@@ -133,7 +133,7 @@ app.get('/reset-table',function(req,res,next){
       });
    });
 });
-
+*/
 app.use(function(req,res){
   res.status(404);
   res.render('404');
